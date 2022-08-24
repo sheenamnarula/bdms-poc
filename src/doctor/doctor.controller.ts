@@ -13,19 +13,20 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
   constructor(private doctorService: DoctorService,private userService:UserService) {}
 
   @Get('list')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   listDoctor() {
     return this.doctorService.findDoctorsList();
   }
 
 
   @Get(':id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   createOrder(@Param('id') id: string) {
     return this.doctorService.findDoctorByPayload({doctorId:id});
   }
   
   @Get("slots")
+  @UseGuards(JwtAuthGuard)
   getDoctorSlots(){
     return this.doctorService.getSlots();
   }

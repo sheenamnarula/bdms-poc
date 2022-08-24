@@ -7,14 +7,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'secretKey',
+      secretOrKey: process.env.SECRET_KEY,
     });
   }
   async validate(payload: any, done: VerifiedCallback) {
     let user ;
      user = await this.authService.validateDoctor(payload);
+     // check doctor
+     if(user){
+      user["isDoctor"] = true;
+
+     }
     if(!user){
        user = await this.authService.validatePatient(payload);
+
     }
     if (!user) {
       return done(
