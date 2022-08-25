@@ -1,10 +1,5 @@
- import { Controller, Get, UseGuards, Post, Body ,Param} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-
-import { User } from '../utilities/user.decorator';
-import { Doctor as UserDocument } from '../types/user';
+ import { Controller, Get, UseGuards, Post, Body ,Param, InternalServerErrorException} from '@nestjs/common';
 import { DoctorService } from './doctor.service';
-import { DoctorDTO } from './doctor.dto';
 import { UserService } from 'src/shared/user.service';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
@@ -15,20 +10,35 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
   @Get('list')
   @UseGuards(JwtAuthGuard)
   listDoctor() {
-    return this.doctorService.findDoctorsList();
+    try{
+      return this.doctorService.findDoctorsList();
+
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
+    }
   }
 
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   createOrder(@Param('id') id: string) {
-    return this.doctorService.findDoctorByPayload({doctorId:id});
+    try{
+      return this.doctorService.findDoctorByPayload({doctorId:id});
+
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
+    }
   }
   
   @Get("slots")
   @UseGuards(JwtAuthGuard)
   getDoctorSlots(){
-    return this.doctorService.getSlots();
+    try{
+      return this.doctorService.getSlots();
+
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
+    }
   }
 
 

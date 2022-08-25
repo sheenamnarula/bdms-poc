@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, InternalServerErrorException } from '@nestjs/common';
 
 import { UserService } from '../shared/user.service';
 import { Payload } from '../types/payload';
@@ -14,41 +14,8 @@ export class AuthController {
 
   @Post('patient/login')
   async patientLogin(@Body() userDTO: PatientLoginDTO) {
-    const user = await this.userService.findPatientByLogin(userDTO);
-    const payload: Payload = {
-      username: user.username,
-      phone:user.phone
-    };
-    const token = await this.authService.signPayload(payload);
-    return { data:user, token };
-  }
-  @Post('doctor/login')
-  async doctorLogin(@Body() userDTO: DoctorLoginDTO) {
-    const user = await this.userService.findDoctorByLogin(userDTO);
-    const payload: Payload = {
-      username: user.username,
-      phone:user.phone
-    };
-    const token = await this.authService.signPayload(payload);
-    return { data:user, token };
-  }
-
-  @Post('patient/register')
-  async patientRegister(@Body() userDTO: PatientRegisterDTO) {
-    const user = await this.userService.createPatient(userDTO);
-    const payload: Payload = {
-      username: user.username,
-      phone:user.phone
-    };
-    const token = await this.authService.signPayload(payload);
-    return { data:user, token };
-  }
-
-  @Post('doctor/register')
-  async doctorRegister(@Body() userDTO: DoctorRegisterDTO) {
     try{
-      console.log("user dto ==>>>>",userDTO)
-      const user = await this.userService.createDoctor(userDTO);
+      const user = await this.userService.findPatientByLogin(userDTO);
       const payload: Payload = {
         username: user.username,
         phone:user.phone
@@ -56,7 +23,57 @@ export class AuthController {
       const token = await this.authService.signPayload(payload);
       return { data:user, token };
     }catch(error){
-      console.log(error)
+      throw new InternalServerErrorException(error.message)
+    }
+    
+  }
+  @Post('doctor/login')
+  async doctorLogin(@Body() userDTO: DoctorLoginDTO) {
+    try{
+      const user = await this.userService.findDoctorByLogin(userDTO);
+      const payload = {
+        username: user.username,
+        phone:user.phone,
+        // id : user._id
+      };
+      const token = await this.authService.signPayload(payload);
+      return { data:user, token };
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
+    }
+
+  }
+
+  @Post('patient/register')
+  async patientRegister(@Body() userDTO: PatientRegisterDTO) {
+    try{
+      const user = await this.userService.createPatient(userDTO);
+      const payload = {
+        username: user.username,
+        phone:user.phone,
+        // id : user._id
+      };
+      const token = await this.authService.signPayload(payload);
+      return { data:user, token };
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
+    }
+    
+  }
+
+  @Post('doctor/register')
+  async doctorRegister(@Body() userDTO: DoctorRegisterDTO) {
+    try{
+      const user = await this.userService.createDoctor(userDTO);
+      const payload = {
+        username: user.username,
+        phone:user.phone,
+        // id: user._id
+      };
+      const token = await this.authService.signPayload(payload);
+      return { data:user, token };
+    }catch(error){
+      throw new InternalServerErrorException(error.message)
     }
   }
 }
