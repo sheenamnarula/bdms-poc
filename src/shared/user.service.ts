@@ -83,8 +83,8 @@ export class UserService {
   }
 
   async findDoctorByPayload(payload: any) {
-    const { id } = payload;
-    return await this.doctorModel.findOne({ _id:id });
+    const { username } = payload;
+    return await this.doctorModel.findOne({ username });
   }
 
   sanitizeUser(user: Doctor|Patient) {
