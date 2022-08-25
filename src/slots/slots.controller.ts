@@ -8,7 +8,7 @@ import { SlotService } from './slots.service';
   constructor(private slotService: SlotService) {}
 
   @Get('')
-   @UseGuards(AuthGuard('jwt'))
+  //  @UseGuards(AuthGuard('jwt'))
   async getSlots() {
       try{
         return await this.slotService.getSlots();
