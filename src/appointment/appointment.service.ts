@@ -44,8 +44,7 @@ export class AppointmentService {
 
 	async getAppointments(payload: any) {
 		const doctorId = payload.doctorId;
-		const appointments = await this.appointmentModel.find(payload);
-		console.log(appointments)
+		const appointments = await this.appointmentModel.find(payload).populate("slotId");
 		const sortedAppointments = appointments.sort((a, b) => {
 			return (
 				Date.parse(b.date) -
@@ -60,7 +59,7 @@ export class AppointmentService {
 		const appointmentId = payload.appointmentId;
 		const appointment = await this.appointmentModel.findOne({
 			_id: appointmentId,
-		});
+		}).populate("slotId");
 		if (appointment) return appointment;
 		throw new HttpException("No appointment found", HttpStatus.NO_CONTENT);
 	}
@@ -75,7 +74,7 @@ export class AppointmentService {
 		currDate += month < 10 ? ('-0' + month.toString()) : '-' + month.toString()
 		currDate += '-' + date.getFullYear().toString()
 		const query = payload.isDoctor ? { doctorId: payload._id.toString() } : { patientId: payload._id.toString() }
-		const appointments = await this.appointmentModel.find({ ...query, date: currDate });
+		const appointments = await this.appointmentModel.find({ ...query, date: currDate }).populate("slotId");
 
 		const sortedAppointments = appointments.sort((a, b) => {
 			return (
