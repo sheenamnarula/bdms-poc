@@ -8,6 +8,9 @@ export interface Doctor extends Document {
   phone: string;
   gender:string;
   specialization:string;
+  name:string;
+  dob:string;
+  address:string;
   created: Date;
 }
 
@@ -42,4 +45,7 @@ export interface Patient extends Document {
   phone: string;
   gender:string;
   created: Date;
+  name:string;
+  dob:string;
+  address:string;
 }

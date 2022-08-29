@@ -9,6 +9,9 @@ export interface PatientRegisterDTO {
   password: string;
   phone:string,
   gender:string
+  name: string
+  address:string
+  dob:string
 }
 
 export interface DoctorLoginDTO {
@@ -22,4 +25,7 @@ export interface DoctorRegisterDTO {
   phone:string,
   gender:string,
   specialization:string
+  name: string
+  address:string
+  dob:string
 }

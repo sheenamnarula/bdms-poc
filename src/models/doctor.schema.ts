@@ -38,6 +38,9 @@ enum:[constants.SPECIALIZATION.DENTIST,
     constants.SPECIALIZATION.SURGEON
 ]},
   created: { type: Date, default: Date.now },
+  name:{type: String, required: true},
+  address:{type: String, required: true},
+  dob:{type: String, required: true}
 });
 
 DoctorSchema.pre('save', async function(next) {

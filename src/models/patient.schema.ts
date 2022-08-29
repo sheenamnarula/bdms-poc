@@ -15,6 +15,9 @@ export const PatientSchema = new mongoose.Schema({
     ]
 },
   created: { type: Date, default: Date.now },
+  name:{type: String, required: true},
+  address:{type: String, required: true},
+  dob:{type: String, required: true}
 });
 
 PatientSchema.pre('save', async function(next) {
