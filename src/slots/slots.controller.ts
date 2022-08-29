@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards,Param, InternalServerErrorException} from '@nestjs/common';
+import { Controller, Get, UseGuards,Param, InternalServerErrorException, Query} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SlotService } from './slots.service';
 
@@ -9,9 +9,11 @@ import { SlotService } from './slots.service';
 
   @Get('')
    @UseGuards(AuthGuard('jwt'))
-  async getSlots() {
+  async getSlots(@Query() query) {
       try{
-        return await this.slotService.getSlots();
+        let date = query.date;
+        let doctorId = query.doctorId
+        return await this.slotService.getSlots(date,doctorId);
 
       }catch(error){
           throw new InternalServerErrorException(error.message)
