@@ -19,12 +19,16 @@ export class AppointmentController {
     @UseGuards(JwtAuthGuard)
     getAppointments(@Request() req) {
         try {
+            let query = {}
+            if(req.query["date"]){
+                query = {date : req.query["date"]}
+            }
             if (req.user['isDoctor']) {
-                return this.appointmentService.getAppointments({ doctorId: req.user._id.toString() })
+                return this.appointmentService.getAppointments({ ...query, doctorId: req.user._id.toString() })
 
             } else {
                 console.log(req.user._id.toString())
-                return this.appointmentService.getAppointments({ patientId: req.user._id.toString() })
+                return this.appointmentService.getAppointments({ ...query,patientId: req.user._id.toString() })
             }
         } catch (error) {
             throw new InternalServerErrorException(error.message)

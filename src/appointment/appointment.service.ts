@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Appointment, DateSchedule, Doctor, Patient, Slot } from '../types/user';
@@ -9,39 +9,43 @@ export class AppointmentService {
 
 
 	async createAppointment(payload: any) {
-		const patientId = payload.patientId; // Patient's id
-		const patientName = payload.patientName; // Patient's name
-		const doctorId = payload.doctorId; // Doctor's id 606460d2e0dd28cc76d9b0f3 
-		const slotId = payload.slotId; // Id of that particular slot
-		const date = payload.date;
+		try {
+			const patientId = payload.patientId; // Patient's id
+			const patientName = payload.patientName; // Patient's name
+			const doctorId = payload.doctorId; // Doctor's id 606460d2e0dd28cc76d9b0f3 
+			const slotId = payload.slotId; // Id of that particular slot
+			const date = payload.date;
 
-		const isExist = await this.appointmentModel.findOne({ doctorId, slotId, date });
-		if (isExist) throw new HttpException("Slot is not available", HttpStatus.CONFLICT);
+			const isExist = await this.appointmentModel.findOne({ doctorId, slotId, date });
+			if (isExist) throw new HttpException("Slot is not available", HttpStatus.CONFLICT);
 
-		const doctor = await this.doctorModel.findOne({ _id: doctorId });
-		// Create an entry in the appointment database
-		const newAppointment = new this.appointmentModel({
-			doctorId,
-			date,
-			slotId,
-			patientId,
-			doctorName: doctor.username,
-			patientName: patientName
-		});
+			const doctor = await this.doctorModel.findOne({ _id: doctorId });
+			// Create an entry in the appointment database
+			const newAppointment = new this.appointmentModel({
+				doctorId,
+				date,
+				slotId,
+				patientId,
+				doctorName: doctor.username,
+				patientName: patientName,
+				name: payload.name,
+				address: payload.address,
+				dob: payload.dob,
+				symptoms: payload.symptoms
+			});
 
-		console.log(newAppointment);
 
-		newAppointment
-			.save()
-			.then((appointment) => {
-				return appointment;
-			})
-
+			return await newAppointment
+				.save()
+		} catch (error) {
+			throw error
+		}
 	}
 
 	async getAppointments(payload: any) {
 		const doctorId = payload.doctorId;
 		const appointments = await this.appointmentModel.find(payload);
+		console.log(appointments)
 		const sortedAppointments = appointments.sort((a, b) => {
 			return (
 				Date.parse(b.date) -
@@ -69,7 +73,7 @@ export class AppointmentService {
 
 		currDate += day < 10 ? ('0' + day.toString()) : '' + day.toString()
 		currDate += month < 10 ? ('-0' + month.toString()) : '-' + month.toString()
-		currDate += '-'+date.getFullYear().toString()
+		currDate += '-' + date.getFullYear().toString()
 		const query = payload.isDoctor ? { doctorId: payload._id.toString() } : { patientId: payload._id.toString() }
 		const appointments = await this.appointmentModel.find({ ...query, date: currDate });
 

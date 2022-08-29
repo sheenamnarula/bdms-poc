@@ -15,13 +15,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus
       ? exception.getStatus()
       : HttpStatus.INTERNAL_SERVER_ERROR;
-    console.log(exception)
+    console.log(exception.getResponse())
     const errorResponse = {
       code: status,
       timestamp: new Date().toLocaleDateString(),
       path: request.url,
       method: request.method,
-      message: exception.getResponse ? exception.getResponse()["message"] : exception.message
+      message: exception.getResponse ? exception.getResponse() : exception.message
         // status !== HttpStatus.INTERNAL_SERVER_ERROR
         //   ?  exception.getResponse()["message"] || null
         //   : 'Internal server error',
