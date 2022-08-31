@@ -49,7 +49,7 @@ export class UserService {
     const { username, password } = userDTO;
     const user = await this.patientModel
       .findOne({ username })
-      .select('username password phone gender created ');
+      .select('username password phone gender created name dob address');
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
@@ -65,7 +65,7 @@ export class UserService {
     const { username, password } = userDTO;
     const user = await this.doctorModel
       .findOne({ username })
-      .select('username password phone gender created specialization');
+      .select('username password phone gender created specialization name dob address');
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
@@ -94,3 +94,5 @@ export class UserService {
     // return user.depopulate('password');
   }
 }
+
+
