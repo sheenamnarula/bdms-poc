@@ -137,4 +137,14 @@ export class AppointmentService {
 		})
 	}
 
+	async saveRoomId(roomId,appointmentId){
+		await this.appointmentModel.updateOne({
+			_id: appointmentId
+		},{
+			$set : {
+				sendBirdLink : roomId
+			}
+		})
+	}
+
 }

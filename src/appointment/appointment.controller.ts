@@ -69,4 +69,17 @@ export class AppointmentController {
             throw new InternalServerErrorException(error.message)
         }
     }
+
+    @Post("roomId")
+    @UseGuards(JwtAuthGuard)
+
+    saveRoomId(@Body() {roomId, appointmentId})  {
+      try{
+          this.appointmentService.saveRoomId(roomId,appointmentId)
+        return {message : "Room ID is saved successfully"};
+      }catch(error){
+          throw new InternalServerErrorException(error.message)
+      }
+
+    }  
 }
