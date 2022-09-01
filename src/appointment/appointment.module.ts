@@ -20,6 +20,7 @@ import { AppointmentService } from './appointment.service';
   ],
   controllers: [AppointmentController,SlotController],
 
+  
 providers: [AppointmentService,SlotService],
 })
 export class AppointmentModule {}
