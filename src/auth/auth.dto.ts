@@ -1,31 +1,82 @@
+import { IsString, IsNotEmpty } from 'class-validator';
 
-export interface PatientLoginDTO {
+export class PatientLoginDTO {
+
+  @IsString()
+  @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }
 
-export interface PatientRegisterDTO {
+export class PatientRegisterDTO {
+  @IsString()
+  @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsNotEmpty()
   password: string;
-  phone:string,
+
+  @IsString()
+  @IsNotEmpty()
+  phone:string
+
+  @IsString()
+  @IsNotEmpty()
   gender:string
+
+  @IsString()
+  @IsNotEmpty()
   name: string
+
+  @IsString()
+  @IsNotEmpty()
   address:string
+
+  @IsString()
+  @IsNotEmpty()
   dob:string
 }
 
-export interface DoctorLoginDTO {
+export class DoctorLoginDTO {
+  @IsString()
+  @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }
 
-export interface DoctorRegisterDTO {
+export class DoctorRegisterDTO {
+  @IsString()
+  @IsNotEmpty()
   username: string;
+  @IsString()
+  @IsNotEmpty()
   password: string;
-  phone:string,
-  gender:string,
-  specialization:string
-  name: string
-  address:string
+  @IsString()
+  @IsNotEmpty()
+  phone:string;
+  @IsString()
+  @IsNotEmpty()
+  gender:string;
+  @IsString()
+  @IsNotEmpty()
+  specialization:string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address:string;
+
+  @IsString()
+  @IsNotEmpty()
   dob:string
 }

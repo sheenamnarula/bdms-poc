@@ -1,5 +1,6 @@
 import { Body, Controller, Get, InternalServerErrorException, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
+import { AppointmentDto } from "./appointment.dto";
 import { AppointmentService } from "./appointment.service";
 
 @Controller("appointment")
@@ -7,7 +8,7 @@ export class AppointmentController {
     constructor(private appointmentService: AppointmentService) { }
     @Post("create")
     @UseGuards(JwtAuthGuard)
-    createAppointment(@Body() payload: any) {
+    createAppointment(@Body() payload: AppointmentDto) {
         try {
             return this.appointmentService.createAppointment(payload);
         } catch (error) {
