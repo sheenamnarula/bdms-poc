@@ -49,3 +49,11 @@ export interface Patient extends Document {
   dob:string;
   address:string;
 }
+
+export interface Availability extends Document {
+  _id:string;
+  doctorId:string;
+  date:string;
+  slotId:string;
+  blocked:boolean
+}
