@@ -59,7 +59,7 @@ export class SlotController {
 
   @Get('/block')
   @UseGuards(AuthGuard('jwt'))
-  async getBlockedSlots(@Body() payload: any, @Request() req : any) {
+  async getBlockedSlots(@Query() payload: any, @Request() req : any) {
     try {
       // check for res
       return await this.slotService.getBlockedSlots(payload, req.user._id)
