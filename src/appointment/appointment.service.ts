@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Appointment, DateSchedule, Doctor, Patient, Slot,Availability } from '../types/user';
+import { Appointment, DateSchedule, Doctor, Patient, Slot, Availability } from '../types/user';
 @Injectable()
 export class AppointmentService {
-	constructor(@InjectModel('Doctor') private doctorModel: Model<Doctor>, @InjectModel('Appointment') private appointmentModel: Model<Appointment>, 
-	@InjectModel('Slot') private slotModel: Model<Slot>,@InjectModel('Availability') private availability: Model<Availability>) { }
+	constructor(@InjectModel('Doctor') private doctorModel: Model<Doctor>, @InjectModel('Appointment') private appointmentModel: Model<Appointment>,
+		@InjectModel('Slot') private slotModel: Model<Slot>, @InjectModel('Availability') private availability: Model<Availability>) { }
 
 
 
@@ -20,8 +20,8 @@ export class AppointmentService {
 			const isExist = await this.appointmentModel.findOne({ doctorId, slotId, date });
 			if (isExist) throw new HttpException("Slot is not available", HttpStatus.CONFLICT);
 
-			const isBlocked = await this.availability.findOne({ doctorId, slotId, date,blocked:true });
-			if(isBlocked)throw new HttpException("Doctor is not available", HttpStatus.CONFLICT);
+			const isBlocked = await this.availability.findOne({ doctorId, slotId, date, blocked: true });
+			if (isBlocked) throw new HttpException("Doctor is not available", HttpStatus.CONFLICT);
 
 			const doctor = await this.doctorModel.findOne({ _id: doctorId });
 			// Create an entry in the appointment database
@@ -141,14 +141,43 @@ export class AppointmentService {
 		})
 	}
 
-	async saveRoomId(roomId,appointmentId){
+	async saveRoomId(roomId, appointmentId) {
 		await this.appointmentModel.updateOne({
 			_id: appointmentId
-		},{
-			$set : {
-				sendBirdLink : roomId
+		}, {
+			$set: {
+				sendBirdLink: roomId
 			}
 		})
+	}
+
+	async cancelAppointment({ appointmentId }) {
+		return await this.appointmentModel.findByIdAndUpdate({
+			_id: appointmentId
+		},
+			{
+				$set: {
+					isActive: false
+				}
+			})
+	}
+
+	async rescheduleAppointment({ appointmentId, date, slotId }) {
+		let appointmentDetails = await this.appointmentModel.findById(appointmentId)
+		const isExist = await this.appointmentModel.findOne({ doctorId: appointmentDetails.doctorId, slotId, date, isActive:true });
+		if (isExist) throw new HttpException("Slot is not available", HttpStatus.CONFLICT);
+
+		const isBlocked = await this.availability.findOne({ doctorId: appointmentDetails.doctorId, slotId, date, blocked: true });
+		if (isBlocked) throw new HttpException("Doctor is not available", HttpStatus.CONFLICT);
+		return await this.appointmentModel.updateOne({
+			appointmentId
+		},
+			{
+				$set: {
+					date,
+					slotId
+				}
+			})
 	}
 
 }

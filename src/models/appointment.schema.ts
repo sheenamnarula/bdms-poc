@@ -57,5 +57,6 @@ export const appointmentSchema = new mongoose.Schema({
   name:{type: String, required: true},
   address:{type: String, required: true},
   dob:{type: String, required: true},
-  symptoms : {type: String, required: true}
+  symptoms : {type: String, required: true},
+  isActive: {type: Boolean,default: true}
 });
