@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { AppointmentDto } from "./appointment.dto";
 import { AppointmentService } from "./appointment.service";
@@ -106,9 +106,14 @@ export class AppointmentController {
             if (modifiedCount) {
                 return { message: "Appointment is rescheduled sucessfully." }
             } else {
-                return { message: "Failure in rescheduling appointment." }
+                throw new Error("Failure in rescheduling the appointment")
+                // return { message: "Failure in rescheduling appointment." }
             }
         } catch (error) {
+            console.log(error)
+            if(error.status == 400){
+                throw new BadRequestException(error.message)
+            }
             throw new InternalServerErrorException(error.message)
         }
 

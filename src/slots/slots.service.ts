@@ -63,7 +63,7 @@ export class SlotService {
             doctorId : userId,
             blocked : true,
             date
-        })
+        }).populate("slotId")
     }
 
 }

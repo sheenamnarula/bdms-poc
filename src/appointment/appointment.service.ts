@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Appointment, DateSchedule, Doctor, Patient, Slot, Availability } from '../types/user';
@@ -163,7 +163,10 @@ export class AppointmentService {
 	}
 
 	async rescheduleAppointment({ appointmentId, date, slotId }) {
-		let appointmentDetails = await this.appointmentModel.findById(appointmentId)
+		let appointmentDetails = await this.appointmentModel.findOne({_id : appointmentId, isActive: true})
+		if(!appointmentDetails){
+			throw new BadRequestException("Unable to find active appointment")
+		}
 		const isExist = await this.appointmentModel.findOne({ doctorId: appointmentDetails.doctorId, slotId, date, isActive:true });
 		if (isExist) throw new HttpException("Slot is not available", HttpStatus.CONFLICT);
 
