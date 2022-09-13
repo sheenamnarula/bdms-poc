@@ -102,13 +102,9 @@ export class AppointmentController {
 
     async rescheduleAppointment(@Body() payload) {
         try {
-            let { modifiedCount } = await this.appointmentService.rescheduleAppointment(payload);
-            if (modifiedCount) {
-                return { message: "Appointment is rescheduled sucessfully." }
-            } else {
-                throw new Error("Failure in rescheduling the appointment")
-                // return { message: "Failure in rescheduling appointment." }
-            }
+            return await this.appointmentService.rescheduleAppointment(payload);
+           // return { message: "Appointment is rescheduled successfully." }
+            
         } catch (error) {
             console.log(error)
             if(error.status == 400){

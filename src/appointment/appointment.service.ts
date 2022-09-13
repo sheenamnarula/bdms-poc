@@ -180,7 +180,7 @@ export class AppointmentService {
 					date,
 					slotId
 				}
-			})
+			},{new:true})
 	}
 
 }
