@@ -172,8 +172,8 @@ export class AppointmentService {
 
 		const isBlocked = await this.availability.findOne({ doctorId: appointmentDetails.doctorId, slotId, date, blocked: true });
 		if (isBlocked) throw new HttpException("Doctor is not available", HttpStatus.CONFLICT);
-		return await this.appointmentModel.updateOne({
-			appointmentId
+		return await this.appointmentModel.findByIdAndUpdate({
+			_id: appointmentId
 		},
 			{
 				$set: {
